@@ -1,0 +1,15 @@
+# stock-fetche-service/service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: stock-fetcher-service
+  namespace: stock-project
+spec:
+  selector:
+    app: stock-fetcher-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5002
+  type: ClusterIP

@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pendejo
+      POSTGRES_DB: stock_db
+    volumes:
+      - ./db-service/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  db-service:
+    build:
+      context: ./db-service
+    container_name: db-service
+    environment:
+      DATABASE_CONFIG: '{"dbname": "stock_db", "user": "user", "password": "pendejo", "host": "postgres", "port": 5432}'
+      FETCHER_SERVICE_URL: "http://stock-fetcher-service:5002/fetch_stock"
+    depends_on:
+      - postgres
+    ports:
+      - "5001:5001"
+
+  client-service:
+    build:
+      context: ./client-service
+    container_name: client-service
+    environment:
+      DB_SERVICE_URL: "http://db-service:5001"
+      FETCHER_SERVICE_URL: "http://stock-fetcher-service:5002"
+    depends_on:
+      - db-service
+    ports:
+      - "5000:5000"
+
+  stock-fetcher-service:
+    build:
+      context: ./stock-fetche-service  # כאן השם מעודכן
+    container_name: stock-fetcher-service
+    environment:
+      DATABASE_URL: "postgresql://user:pendejo@postgres:5432/stock_db"
+      API_URL: "https://www.alphavantage.co/query"
+      API_KEY: "SHVEBV1DFMGYT3Y2"
+    depends_on:
+      - postgres
+    ports:
+      - "5002:5002"
+
+volumes:
+  postgres-data:

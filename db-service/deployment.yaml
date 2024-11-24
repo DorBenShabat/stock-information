@@ -1,0 +1,27 @@
+# db-service/deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-service
+  namespace: stock-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: db-service
+  template:
+    metadata:
+      labels:
+        app: db-service
+    spec:
+      containers:
+      - name: db-service
+        image: db-service
+        ports:
+        - containerPort: 5001
+        env:
+        - name: DATABASE_CONFIG
+          value: '{"dbname": "stock_db", "user": "user", "password": "pendejo", "host": "postgres", "port": 5432}'
+        - name: FETCHER_SERVICE_URL
+          value: "http://stock-fetcher-service:5002/fetch_stock"

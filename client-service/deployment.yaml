@@ -1,0 +1,27 @@
+# client-service/deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-service
+  namespace: stock-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: client-service
+  template:
+    metadata:
+      labels:
+        app: client-service
+    spec:
+      containers:
+      - name: client-service
+        image: client-service
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_SERVICE_URL
+          value: "http://db-service:5001"
+        - name: FETCHER_SERVICE_URL
+          value: "http://stock-fetcher-service:5002"

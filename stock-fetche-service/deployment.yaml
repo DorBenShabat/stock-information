@@ -1,0 +1,29 @@
+# stock-fetche-service/deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-fetcher-service
+  namespace: stock-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stock-fetcher-service
+  template:
+    metadata:
+      labels:
+        app: stock-fetcher-service
+    spec:
+      containers:
+      - name: stock-fetcher-service
+        image: stock-fetcher-service
+        ports:
+        - containerPort: 5002
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://user:pendejo@postgres:5432/stock_db"
+        - name: API_URL
+          value: "https://www.alphavantage.co/query"
+        - name: API_KEY
+          value: "SHVEBV1DFMGYT3Y2"

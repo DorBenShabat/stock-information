@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Information</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Information</h1>
+        <form method="POST">
+            <input type="text" name="stock_name" placeholder="Enter stock name (e.g., AAPL)" required>
+            <button type="submit">Get Stock Information</button>
+        </form>
+        
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+
+        {% if stock_data %}
+            <div class="stock-data">
+                <h2>Stock Details</h2>
+                <div class="stock-details">
+                    <p><strong>Name:</strong> {{ stock_data['stock']['name'] }}</p>
+                    <p><strong>Date:</strong> {{ stock_data['stock']['date'] }}</p>
+                    <p><strong>Open:</strong> {{ stock_data['stock']['open'] }}</p>
+                    <p><strong>High:</strong> {{ stock_data['stock']['high'] }}</p>
+                    <p><strong>Low:</strong> {{ stock_data['stock']['low'] }}</p>
+                    <p><strong>Close:</strong> {{ stock_data['stock']['close'] }}</p>
+                    <p><strong>Volume:</strong> {{ stock_data['stock']['volume'] }}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
